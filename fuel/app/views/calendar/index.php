@@ -18,7 +18,7 @@
         週の始まり
         <select name="start_week_day">
             <?php foreach (Config::get('calendar.week_day_array') as $key => $value): ?>
-                <option value="<?php echo $key; ?>"<?php  echo $week_selectbox_selected_param; ?>>
+                <option value="<?php echo $key; ?>"<?php echo $start_week_day == $value ? " selected" : ""; ?>>
                     <?php echo $value; ?>
                 </option>
             <?php endforeach; ?>
@@ -31,7 +31,7 @@
             </p>
         </form>
         
-        <table id="calendar"></table>
+        <?php echo $calendar; ?>
         
         <div id="schedule_form_div">
             <form id="schedule_form">

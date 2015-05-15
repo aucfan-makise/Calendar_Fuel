@@ -1,4 +1,5 @@
 <?php
+use Calendar\CalendarFunction;
 /**
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
@@ -30,12 +31,21 @@ class Controller_Index extends Controller
 	 */
 	public function action_index()
 	{
-	    $calendar = View::forge('calendar/calendar');
-	    $presenter = Presenter::forge('calendar/table');
-	    $presenter->test = 'test';
-	    $calendar->table = $presenter;
-	    return $calendar;
-// 		return Response::forge(Presenter::forge('calendar/index'));
+	    session_start();
+	    $calendar = Presenter::forge('calendar/calendar');
+	    $calendar_function = new CalendarFunction();
+	    $table = array();
+	    for ($i = $calendar_function->getStartDate(), $interval = new \DateInterval('P1M'); $i <= $calendar_function->getEndDate(); $i->add($interval)){
+		    $presenter = Presenter::forge('calendar/table');
+    	    $presenter->date = clone $i;
+    	    $presenter->start_week_day = $calendar_function->getStartWeekDay();
+    	    $presenter->calendar_array = $calendar_function->getMonthCalendarArray($i);
+    	    $table[] = $presenter;
+	    }
+	    $calendar->table = $table;
+	    $index_presenter = Presenter::forge('calendar/index');
+	    $index_presenter->calendar = $calendar;
+	    return $index_presenter;
 	}
 
 	/**
