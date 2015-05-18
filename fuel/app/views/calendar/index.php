@@ -15,10 +15,11 @@
     <button name="select_date_next">次</button>
     <p>
         <select name="select_date_combo"></select>
+
         週の始まり
         <select name="start_week_day">
             <?php foreach (Config::get('calendar.week_day_array') as $key => $value): ?>
-                <option value="<?php echo $key; ?>"<?php echo $start_week_day == $value ? " selected" : ""; ?>>
+                <option value="<?php echo $key; ?>">
                     <?php echo $value; ?>
                 </option>
             <?php endforeach; ?>
@@ -31,7 +32,7 @@
             </p>
         </form>
         
-        <?php echo $calendar; ?>
+        <div id="calendar_div"></div>
         
         <div id="schedule_form_div">
             <form id="schedule_form">

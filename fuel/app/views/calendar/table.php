@@ -1,5 +1,3 @@
-<?php
-?>
 <table class="calendar_table">
     <tr>
 	    <td class="calendar_table_title" colspan="7">

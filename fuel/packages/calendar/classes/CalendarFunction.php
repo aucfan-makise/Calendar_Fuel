@@ -2,10 +2,11 @@
 namespace Calendar;
 use Fuel\Core\Config;
 class CalendarFunction {
+    private $errorMessage = array();
     private $today_date;
     private $today_date_array;
     private $start_week_day = 0;
-    private $calendar_size = 5;
+    private $calendar_size = 3;
     private $calendar_div;
     
     private $selected_date_datetime;
@@ -14,16 +15,40 @@ class CalendarFunction {
     
     private $calendar_array;
     
+    private function setErrorMessage($msg){
+        $this->errorMessage[] = $msg;
+    }
     public function __construct(){
+        $this->checkGetData();
         $this->calendar_div = Config::get('calendar.calendar_div_array');
         $this->today_date = new \DateTime('NOW');
         $this->today_date_array = date_parse($this->today_date->format('Y-n-j'));
-        $this->selected_date_datetime = new \DateTime('2015-5');
+        
+        if (isset($_GET['select_date'])){
+            $this->selected_date_datetime = new \DateTime($_GET['select_date']);
+        } else {
+            $this->selected_date_datetime = new \DateTime($this->today_date->format('Y-n'));
+        }
         $start_calendar = date('Y-n', strtotime($this->selected_date_datetime->format('Y-n') . ' -' . floor($this->calendar_size / 2) . ' month'));
         $this->start_datetime = new \DateTime($start_calendar);
         $end_calendar = date('Y-n', strtotime($this->selected_date_datetime->format('Y-n') . ' +' . ceil($this->calendar_size / 2) . ' month -1 month'));
         $this->end_datetime = new \DateTime($end_calendar);
 	    $this->calendar_array = $this->createCalendarArray();
+    }
+    
+    protected function checkGetData(){
+        try {
+            if (isset($_GET['start_week_day'])){
+			    if ($_GET['start_week_day'] > 6 || $_GET < 0) {
+			        throw new Exception('開始の曜日の選択が不正です。');
+			    }
+			    if (isset($_GET['start_week_day'])) {
+				    $this->start_week_day = $_GET['start_week_day'];
+		        }
+            }
+        } catch (Exception $e) {
+            $this->setErrorMessage('パラメータの値が不正です。' . $e->getMessage());
+        }
     }
     /**
      * 週初めの曜日かどうか調べる

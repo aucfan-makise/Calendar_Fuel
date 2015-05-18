@@ -117,6 +117,7 @@ td.calendar_week_column {
 .calendar_schedule_div{
 	overflow: auto;
 	min-height: 70px;
+	max-height: 70px;
 	font-size: 9px;
 }
 .calendar_schedule_div a{

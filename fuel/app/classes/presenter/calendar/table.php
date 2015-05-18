@@ -15,7 +15,7 @@ class Presenter_Calendar_Table extends Presenter{
             $array[] = $week_day_array[$week_day_num];
         }
         if ($this->start_week_day != 0){
-            foreach (range(0, $this->start_week_day) as $week_day_num){
+            foreach (range(0, $this->start_week_day - 1) as $week_day_num){
                 $array[] = $week_day_array[$week_day_num];    
             }
         }

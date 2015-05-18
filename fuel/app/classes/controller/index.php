@@ -32,6 +32,12 @@ class Controller_Index extends Controller
 	public function action_index()
 	{
 	    session_start();
+	    $index_presenter = Presenter::forge('calendar/index');
+
+	    return $index_presenter;
+	}
+	
+	public function action_calendar(){
 	    $calendar = Presenter::forge('calendar/calendar');
 	    $calendar_function = new CalendarFunction();
 	    $table = array();
@@ -43,9 +49,8 @@ class Controller_Index extends Controller
     	    $table[] = $presenter;
 	    }
 	    $calendar->table = $table;
-	    $index_presenter = Presenter::forge('calendar/index');
-	    $index_presenter->calendar = $calendar;
-	    return $index_presenter;
+	    
+	    return $calendar;
 	}
 
 	/**
