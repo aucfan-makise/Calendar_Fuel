@@ -9,13 +9,21 @@
     <?php echo Asset::css('calendar.css'); ?>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <?php echo Asset::js('calendar.js'); ?>
+    <?php echo Asset::js('schedule.js'); ?>
 </head>
 <body>
+    <?php if (isset($user_name)): ?>
+        User:<?php echo $user_name; ?>
+        <a href="/index/logout">ログアウト</a>
+    <?php else: ?>
+        <a href="/index/login">ログイン</a>
+        <a href="/index/account_registration">新規登録</a>
+    <?php endif; ?>
+    <br>
     <button name="select_date_before">前</button>
     <button name="select_date_next">次</button>
     <p>
         <select name="select_date_combo"></select>
-
         週の始まり
         <select name="start_week_day">
             <?php foreach (Config::get('calendar.week_day_array') as $key => $value): ?>
@@ -58,12 +66,11 @@
                     <input type="text" size="100" maxlength="500" id="schedule_detail" name="schedule_detail">
                     
                     <button id="register">登録</button>
-                    <input type="hidden" id="mode">
                     <input type="hidden" id="view_id">
                     <button id="modify">修正</button>
                     <button id="delete">削除</button>
                 </p>
-<!--                 hiddenのセッションID -->
+                <input type="hidden" name="token" value="<?php echo AccountFunction::getToken(); ?>">
             </form>
             <button id="schedule_form_close">キャンセル</button>
             <div id="error_message"></div>

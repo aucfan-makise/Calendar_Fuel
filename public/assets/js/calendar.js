@@ -4,7 +4,7 @@
 
 		$.ajax({
 			type: 'GET',
-			url: 'calendar',
+			url: '/index/calendar',
 			dataType: 'html',
 			success: function(data){
 				$('#calendar_div').append(data);
@@ -17,7 +17,7 @@
 		$('[name=select_date_before]').click(function(){
 			$.ajax({
 				type: 'GET',
-				url: 'calendar',
+				url: '/index/calendar',
 				dataType: 'html',
 				data: {select_date: $(this).val(),
 					start_week_day : $('[name=start_week_day]').val()},
@@ -38,7 +38,7 @@
 		$('[name=select_date_next]').click(function(){
 			$.ajax({
 				type: 'GET',
-				url: 'calendar',
+				url: '/index/calendar',
 				dataType: 'html',
 				data: {select_date: $(this).val(),
 					start_week_day : $('[name=start_week_day]').val()},
@@ -59,7 +59,7 @@
 		$('[name=select_date_combo]').change(function(){
 			$.ajax({
 				type: 'GET',
-				url: 'calendar',
+				url: '/index/calendar',
 				dataType: 'html',
 				data: {select_date : $('[name=select_date_combo]').val(),
 					start_week_day : $('[name=start_week_day]').val()},
@@ -77,7 +77,7 @@
 		$('[name=start_week_day]').change(function(){
 			$.ajax({
 				type: 'GET',
-				url: 'calendar',
+				url: '/index/calendar',
 				dataType: 'html',
 				data: {selected_date : $('[name=select_date_combo]').val(),
 					start_week_day : $('[name=start_week_day]').val()},
@@ -94,7 +94,7 @@
 			$('#schedule_form_finish_div').css('visibility', 'hidden');
 			$.ajax({
 				type: 'GET',
-				url: 'calendar',
+				url: '/index/calendar',
 				dataType: 'html',
 				data: {selected_date : $('[name=select_date_combo]').val(),
 					start_week_day : $('[name=start_week_day]').val()},
@@ -114,8 +114,9 @@
             event.preventDefault();
             var $form = $('#schedule_form');
             var param = $form.serializeArray();
+//            console.dir(param);
             $.ajax({
-                url: 'schedule_edit.php',
+                url: '/index/schedule',
                 type: 'post',
                 dataType : 'json',
                 data: {schedule_start_year : param[0].value,
@@ -132,13 +133,14 @@
                     schedule_detail : param[11].value,
                     token : param[12].value,
                     view_id : $('#view_id').val(),
-                    mode :  $(this).attr('id')
+                    mode : $(this).attr('id'),
                     },
                 
                 beforeSend: function(xhr, settings){
                     $('#register, #modify, #delete').attr('disabled', true);
                 },
                 success: function(data){
+                    console.log(data);
                     if(data.result === true){
                         if(data.mode === 'register'){
                             $('#schedule_form_finish_message').text('登録しました。');

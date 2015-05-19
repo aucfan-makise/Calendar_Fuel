@@ -1,7 +1,7 @@
 (function(){
 		$(function(){
 			
-		$('.schedule_registration').click(function(){
+		$('#calendar_div').on('click', '.schedule_registration', function(){
 			$('#schedule_form_div, #schedule_form_div *:not(#delete, #modify)').css('visibility', 'visible');
 			$('#modify, #delete').css('visibility', 'hidden');
 			var date = $(this).attr('id');

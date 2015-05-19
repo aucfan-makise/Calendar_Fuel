@@ -17,4 +17,6 @@ Autoloader::add_core_namespace('Calendar');
 
 Autoloader::add_classes(array(
     'Calendar\\CalendarFunction'   =>  __DIR__.'/classes/CalendarFunction.php',
+    'Calendar\\AccountFunction' =>  __DIR__.'/classes/AccountFunction.php',
+    'Calendar\\ScheduleFunction' => __DIR__.'/classes/ScheduleFunction.php',
 ));

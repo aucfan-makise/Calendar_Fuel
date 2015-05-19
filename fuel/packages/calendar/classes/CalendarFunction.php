@@ -40,7 +40,7 @@ class CalendarFunction {
         try {
             if (isset($_GET['start_week_day'])){
 			    if ($_GET['start_week_day'] > 6 || $_GET < 0) {
-			        throw new Exception('開始の曜日の選択が不正です。');
+			        throw new \Exception('開始の曜日の選択が不正です。');
 			    }
 			    if (isset($_GET['start_week_day'])) {
 				    $this->start_week_day = $_GET['start_week_day'];
