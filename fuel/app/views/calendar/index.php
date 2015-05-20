@@ -32,11 +32,11 @@
                 </option>
             <?php endforeach; ?>
         </select>
-        <form action="calendar.php" method="get">
+        <form>
             <p>
             表示するカレンダーの数
-                <input type="text" size="2" maxlength="2" name="calendar_size" value="3">
-                <input type="submit" value="change">
+                <input type="text" size="2" maxlength="1" name="calendar_size">
+                <button id="change_calendar_size">change</button>
             </p>
         </form>
         

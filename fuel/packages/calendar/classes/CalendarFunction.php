@@ -39,12 +39,18 @@ class CalendarFunction {
     protected function checkGetData(){
         try {
             if (isset($_GET['start_week_day'])){
-			    if ($_GET['start_week_day'] > 6 || $_GET < 0) {
+			    if (! ctype_digit($_GET['start_week_day']) || $_GET['start_week_day'] > 6 || $_GET < 0) {
 			        throw new \Exception('開始の曜日の選択が不正です。');
 			    }
 			    if (isset($_GET['start_week_day'])) {
 				    $this->start_week_day = $_GET['start_week_day'];
-		        }
+			    }
+            }
+            if (isset($_GET['calendar_size'])) {
+                if (! ctype_digit($_GET['calendar_size']) || $_GET['calendar_size'] > 9 || $_GET['calendar_size'] < 0) {
+                    throw new \Exception('カレンダーのサイズが大きすぎるか小さすぎます。');
+                }
+                $this->calendar_size = $_GET['calendar_size'];
             }
         } catch (Exception $e) {
             $this->setErrorMessage('パラメータの値が不正です。' . $e->getMessage());

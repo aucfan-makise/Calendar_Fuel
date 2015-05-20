@@ -21,9 +21,6 @@ class Presenter_Calendar_Table extends Presenter{
         }
         $this->week_day_name_array = $array;
         
-//         日付の配列
-        $this->calendar_array = $this->calendar_array;
-        
 //         祝日かどうかを調べる
         $this->isHoliday = function($day) {
             return empty($day['holiday_name']) ? false : true;

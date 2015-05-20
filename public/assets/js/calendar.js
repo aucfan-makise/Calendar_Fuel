@@ -20,7 +20,8 @@
 				url: '/index/calendar',
 				dataType: 'html',
 				data: {select_date: $(this).val(),
-					start_week_day : $('[name=start_week_day]').val()},
+					start_week_day : $('[name=start_week_day]').val(),
+		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
 					if($('[name=select_date_before]').val() != ''){
 						$('#calendar_div').find('tr:gt(0)').remove();
@@ -41,7 +42,8 @@
 				url: '/index/calendar',
 				dataType: 'html',
 				data: {select_date: $(this).val(),
-					start_week_day : $('[name=start_week_day]').val()},
+					start_week_day : $('[name=start_week_day]').val(),
+		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
 					if($('[name=select_date_next]').val() != ''){
 						$('#calendar_div').find('tr:gt(0)').remove();
@@ -55,14 +57,15 @@
 					alert('Ajax error.');
 				}
 			})
-		})
+		});
 		$('[name=select_date_combo]').change(function(){
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
 				dataType: 'html',
 				data: {select_date : $('[name=select_date_combo]').val(),
-					start_week_day : $('[name=start_week_day]').val()},
+					start_week_day : $('[name=start_week_day]').val(),
+		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
 					$('#calendar_div').find('tr:gt(0)').remove();
 					$('#calendar_div').append(data);
@@ -79,8 +82,9 @@
 				type: 'GET',
 				url: '/index/calendar',
 				dataType: 'html',
-				data: {selected_date : $('[name=select_date_combo]').val(),
-					start_week_day : $('[name=start_week_day]').val()},
+				data: {select_date : $('[name=select_date_combo]').val(),
+					start_week_day : $('[name=start_week_day]').val(),
+		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
 					$('#calendar_div').find('tr:gt(0)').remove();
 					$('#calendar_div').append(data);
@@ -90,6 +94,25 @@
 				}
 			})
 		});
+		$('#change_calendar_size').click(function(event){
+            event.preventDefault();
+		    $.ajax({
+		        type: 'GET',
+		        url: '/index/calendar',
+		        dataType: 'html',
+		        data: {select_date : $('[name=select_date_combo]').val(),
+		            start_week_day : $('[name=start_week_day]').val(),
+		            calendar_size : $('[name=calendar_size]').val()},
+		        success: function(data){
+		            $('#calendar_div').find('tr:gt(0)').remove();
+		            $('#calendar_div').append(data);
+		        },
+		        error:function() {
+		            alert('Ajax error.');
+		        }
+		    })
+		});
+		
 		$('#schedule_form_finish_div_close').click(function(){
 			$('#schedule_form_finish_div').css('visibility', 'hidden');
 			$.ajax({
@@ -170,6 +193,7 @@
 	    initializeMoveButton();
 	    $('[name=start_week_day]').val('0');
 	    appendComboBox();
+	    $('[name=calendar_size]').val('3');
 	}
 	function initializeMoveButton(){
 		var date = new Date();
