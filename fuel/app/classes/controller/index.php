@@ -46,11 +46,11 @@ class Controller_Index extends Controller
 // 	    不正な場合、カレンダーのページを表示する。
 	    if (! AccountFunction::identifyUser($_POST['token'])){
 	        $response['result'] = false;
-	        $response['error_message'] = '不正なアクセス。'.Crypt::encode(Session::key(), false);
+	        $response['error_message'] = '不正なアクセス。';
 	        return json_encode($response);
 	    }
 // 	    ログインしてない場合、ログインページを表示する。
-	    if (! is_null(Session::get('user_name'))){
+	    if (is_null(Session::get('user_name'))){
 	        $response['result'] = false;
 	        $response['error_message'] = 'ログインしてください。';
 	        return json_encode($response);
@@ -68,11 +68,24 @@ class Controller_Index extends Controller
 	    try {
 	        $schedule_function->validateSchedule();
 	    } catch(Exception $e) {
-	        
+	        $response['result'] = false;
+	        $response['error_message'] = $e->getMessage();
+	        return json_encode($response);
 	    }
+	    
+	    Model_Schedule::insert(
+	        Session::get('user_name'),
+	        $schedule_function->getTitle(),
+	        $schedule_function->getDetail(),
+	        $schedule_function->getStartTimeStr(),
+	        $schedule_function->getEndTimeStr());
+	    $response['result'] = true;
+	    $response['mode'] = $schedule_function->getMode();
+	    return json_encode($response);
 	}
 	
 	public function action_calendar(){
+	    
 	    $calendar = Presenter::forge('calendar/calendar');
 	    $calendar_function = new CalendarFunction();
 	    $table = array();

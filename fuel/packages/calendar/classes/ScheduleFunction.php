@@ -7,6 +7,21 @@ class ScheduleFunction {
     private $start_datetime;
     private $end_datetime;
     
+    public function getTitle(){
+        return $this->title;
+    }
+    public function getDetail(){
+        return $this->detail;
+    }
+    public function getStartTimeStr(){
+        return $this->start_datetime->format('Y-n-j G:i');
+    }
+    public function getEndTimeStr(){
+        return $this->end_datetime->format('Y-n-j G:i');
+    }
+    public function getMode(){
+        return $this->mode;
+    }
     public function __construct(){
         $this->start_datetime = new \DateTime();
         $this->end_datetime = new \DateTime();
@@ -20,7 +35,7 @@ class ScheduleFunction {
     }
     
     public function validateSchedule(){
-        if (empty($_POST['title'])) throw new \Exception('タイトルが入力されていません。');
+        if (empty($_POST['schedule_title'])) throw new \Exception('タイトルが入力されていません。');
                 
         $this->dateTimeCheck(
             $_POST['schedule_start_year'],
@@ -37,8 +52,8 @@ class ScheduleFunction {
             $_POST['schedule_end_minute']
             );
         
-        $this->title = $_POST['title'];        
-        if (! empty($_POST['detail'])) $this->detail = $_POST['detail'];
+        $this->title = $_POST['schedule_title'];        
+        if (! empty($_POST['schedule_detail'])) $this->detail = $_POST['schedule_detail'];
         
         try {
             $this->start_datetime->setDate(

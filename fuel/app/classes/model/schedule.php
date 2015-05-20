@@ -34,4 +34,18 @@ class Model_Schedule extends Orm\Model {
             'cascade_delete' => false,
         )
     );
+    
+    public static function insert($user, $title, $detail, $start, $end){
+        $account = Model_Account::query()->select('user_id')->where('user_name', $user)->get_one();
+        $relation = new Model_Relation();
+        $relation->user_id = $account['user_id'];
+
+        $insert = new Model_Schedule();
+        $insert->relations[] = $relation;
+        $insert->title = $title;
+        $insert->detail = $detail;
+        $insert->start_time = $start;
+        $insert->end_time = $end;
+        $insert->save();
+    }
 }

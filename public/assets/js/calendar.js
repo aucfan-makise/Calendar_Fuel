@@ -124,7 +124,6 @@
 				success: function(data){
 					$('#calendar_div').find('tr:gt(0)').remove();
 					$('#calendar_div').append(data);
-					$.getScript('schedule.js');
 					$('#schedule_title').val('');
 					$('#schedule_detail').val('');
 				},
@@ -137,7 +136,6 @@
             event.preventDefault();
             var $form = $('#schedule_form');
             var param = $form.serializeArray();
-//            console.dir(param);
             $.ajax({
                 url: '/index/schedule',
                 type: 'post',
@@ -163,7 +161,6 @@
                     $('#register, #modify, #delete').attr('disabled', true);
                 },
                 success: function(data){
-                    console.log(data);
                     if(data.result === true){
                         if(data.mode === 'register'){
                             $('#schedule_form_finish_message').text('登録しました。');
