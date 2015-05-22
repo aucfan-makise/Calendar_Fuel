@@ -9,29 +9,30 @@
 			
 		});
 		
-		$('.schedule_link').click(function(){
+		$('#calendar_div').on('click', '.schedule_link', function(){
 			$('#schedule_form_div, #schedule_form_div *:not(#register)').css('visibility', 'visible');
-			view_id = $(this).attr('id');
 			$.ajax({
-				url: 'schedule_edit.php',
+				url: '/schedule/refer_schedule_by_id',
 				type: 'post',
 				dataType: 'json',
-				data: {view_id : $(this).attr('id'),
-					mode: 'view'},
+				data: {id : $(this).attr('id')},
 				success: function(data){
-					start_time_obj = data['schedule']['start_time'];
-					end_time_obj = data['schedule']['end_time'];
-					start_date = [start_time_obj['year'], start_time_obj['month'], start_time_obj['day']].join('-');
-					end_date = [end_time_obj['year'], end_time_obj['month'], end_time_obj['day']].join('-');
-					appendDateSelectBox('[name=schedule_start', start_date);
-					appendHourSelectBox('[name=schedule_start', start_time_obj['hour']);
-					appendMinuteSelectBox('[name=schedule_start', start_time_obj['minute']);
-					appendDateSelectBox('[name=schedule_end', end_date);
-					appendHourSelectBox('[name=schedule_end', end_time_obj['hour']);
-					appendMinuteSelectBox('[name=schedule_end', end_time_obj['minute']);
+				    item = data['response']['items'][0];
+				    start_datetime_array = item['start_time'].split(' ');
+				    start_time_array = start_datetime_array[1].split(':');
+				    appendDateSelectBox('[name=schedule_start', start_datetime_array[0]);
+				    appendHourSelectBox('[name=schedule_start', start_time_array[0]);
+				    appendMinuteSelectBox('[name=schedule_start', start_time_array[1]);
+
+				    end_datetime_array = item['end_time'].split(' ');
+				    end_time_array = end_datetime_array[1].split(':');
+				    appendDateSelectBox('[name=schedule_end', end_datetime_array[0]);
+				    appendHourSelectBox('[name=schedule_end', end_time_array[0]);
+				    appendMinuteSelectBox('[name=schedule_end', end_time_array[1]);
+				    
+				    $('#schedule_title').val(item['title']);
+				    $('#schedule_detail').val(item['detail']);
 					$('#view_id').val(view_id);
-					$('#schedule_title').val(data['schedule']['title']);
-					$('#schedule_detail').val(data['schedule']['detail']);
 					$('#register').css('visibility', 'hidden');
 					$('#schedule_form_div, #modify, #delete').css('visibility', 'visible');
 				},
@@ -41,7 +42,6 @@
 				}
 			})
 		});
-		
 		
 		$('[name=schedule_start_year]').change(function(){
 			changeSelectBox('start');
@@ -81,6 +81,8 @@
 
 	function appendDateSelectBox(name, date){
 		date_array = date.split('-');
+		date_array[1] = Number(date_array[1]);
+		date_array[2] = Number(date_array[2]);
 		appendYearSelectBox(name, date_array[0]);
 		appendMonthSelectBox(name, date_array[1]);
 		appendDaySelectBox(name, date_array);

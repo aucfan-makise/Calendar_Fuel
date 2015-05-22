@@ -32,4 +32,12 @@ class Model_Relation extends Orm\Model {
             'cascade_delete' => false,
         )
     );
+    
+    protected static $_has_one = array(
+        'schedule' => array(
+            'key_from' => 'schedules_id',
+            'model_to' => 'Model_Schedule',
+            'key_to' => 'schedules_id',
+        )   
+    );
 }

@@ -28,6 +28,22 @@
 		      <?php foreach ($day['aucfan_topic'] as $topic): ?>
 		          <a href="<?php echo $topic['link']; ?>"><?php echo $topic['title']; ?></a>
 		      <?php endforeach; ?>
+		      <?php if (isset($day['schedules'])): ?>
+		          <?php foreach ($day['schedules'] as $id => $schedule_array): ?>
+		              <a class="schedule_link" id="<?php echo $id; ?>">
+                        <?php if ($schedule_array['start_time'] == '00:00' && $schedule_array['end_time'] == '23:59'): ?>
+                            <?php echo $schedule_array['title']; ?> 
+                        <?php elseif ($schedule_array['end_time'] == '23:59'): ?>
+                            <?php echo $schedule_array['start_time']; ?>~ <?php echo $schedule_array['title']; ?>
+                        <?php elseif ($schedule_array['start_time'] == '00:00'): ?>
+                            ~<?php echo $schedule_array['end_time']; ?> <?php echo $schedule_array['title'];?>
+                        <?php else: ?>
+                            <?php echo $schedule_array['start_time']; ?>~<?php echo $schedule_array['end_time']; ?> <?php echo $schedule_array['title']; ?>
+                        <?php endif; ?>
+		              </a>
+		              <br>
+		          <?php endforeach; ?>
+		      <?php endif; ?>
 		    </div>
 	    </td>
 	    <?php if ($day['week_day'] == ($start_week_day + 6) % 7): ?>

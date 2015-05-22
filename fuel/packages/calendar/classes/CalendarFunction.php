@@ -15,6 +15,10 @@ class CalendarFunction {
     
     private $calendar_array;
     
+    private $public_holiday_array;
+    private $auction_topic_array;
+    private $schedules_array;
+    
     private function setErrorMessage($msg){
         $this->errorMessage[] = $msg;
     }
@@ -207,8 +211,10 @@ class CalendarFunction {
         $this->public_holiday_array = $this->getPublicHolidayData($start_datetime_array, $end_datetime_array);
         $this->auction_topic_array = $this->getAucfanTopicData();
         
-//         $this->schedule_function->getSchedule($start_datetime, $end_datetime);
-//         $this->schedules_array = $this->schedule_function->getSchedulesArray();
+        $schedule_function = new ScheduleFunction();
+        $schedule_function->validateReadOptions($read_start_date, $read_end_date);
+        $this->schedules_array = $this->convertSchedulesArray(json_decode($schedule_function->fetchSchedules()));
+
         for ($year = $start_datetime_array['year']; $year <= $end_datetime_array['year']; ++ $year) {
             if ($year == $start_datetime_array['year'] && $year == $end_datetime_array['year']) {
                 $array[$year] = $this->createYearCarendarArray($year, $start_datetime_array['month'], $end_datetime_array['month']);
@@ -239,9 +245,11 @@ class CalendarFunction {
         $outer_array = array();
         for ($month = $start_month; $month <= $end_month; ++ $month) {
             $inner_array = array();
-            $day_array = array();
             for ($day = 1; $day <= date('t', strtotime($year . '-' . $month)); ++ $day) {
-//                 $array['schedules'] = $this->schedules_array[$year][$month][$day];
+                $array = array();
+                if (isset($this->schedules_array[$year][$month][$day])){
+                    $array['schedules'] = $this->schedules_array[$year][$month][$day];
+                }
                 $array['week_day'] = (string) date('w', strtotime($year . '-' . $month . '-' . $day));
                 $array['day'] = $day;
                 if ($day == $this->today_date_array['day'] && $month == $this->today_date_array['month'] && $year == $this->today_date_array['year']) {
@@ -351,4 +359,71 @@ class CalendarFunction {
     {
         return $this->start_datetime <= $date && $this->end_datetime >= $date ? true : false;
     }
+    
+    private function convertSchedulesArray($schedules_array){
+        $return_array = array();
+        foreach ($schedules_array->response->items as $schedule) {
+            $schedule_start_datetime = new \DateTime($schedule->start_time);
+            $schedule_end_datetime = new \DateTime($schedule->end_time);
+            
+            // 取得開始年月から取得終了年月の最終日まで一日おきに回るループ
+            $current = new \DateTime($schedule_start_datetime->format('Y-m-d'));
+            for ($interval = new \DateInterval('P1D'); $current <= $schedule_end_datetime; $current = $current->add($interval)) {
+                $schedule_array = array(
+                    'title' => $schedule->title,
+                    'detail' => $schedule->detail
+                );
+                $formated_current = $current->format('Y-m-d');
+                $formated_schedule_start_datetime = $schedule_start_datetime->format('Y-m-d');
+                $formated_schedule_end_datetime = $schedule_end_datetime->format('Y-m-d');
+                
+                if ($formated_current === $formated_schedule_start_datetime && $formated_current === $formated_schedule_end_datetime) {
+                    $schedule_array['start_time'] = $schedule_start_datetime->format('G:i');
+                    $schedule_array['end_time'] = $schedule_end_datetime->format('G:i');
+                    $return_array = $this->createDateArray(date_parse($current->format('Y-n-j')), $return_array, $schedule->id, $schedule_array);
+                    continue;
+                }
+                if ($formated_current === $formated_schedule_start_datetime) {
+                    $schedule_array['start_time'] = $schedule_start_datetime->format('G:i');
+                    $schedule_array['end_time'] = '23:59';
+                    $return_array = $this->createDateArray(date_parse($current->format('Y-n-j')), $return_array, $schedule->id, $schedule_array);
+                    continue;
+                }
+                if ($formated_current === $formated_schedule_end_datetime) {
+                    $schedule_array['start_time'] = '00:00';
+                    $schedule_array['end_time'] = $schedule_end_datetime->format('G:i');
+                    $return_array = $this->createDateArray(date_parse($current->format('Y-n-j')), $return_array, $schedule->id, $schedule_array);
+                    continue;
+                }
+                
+                $schedule_array['start_time'] = '00:00';
+                $schedule_array['end_time'] = '23:59';
+                $return_array = $this->createDateArray(date_parse($current->format('Y-n-j')), $return_array, $schedule->id, $schedule_array);
+            }
+        }
+        return $return_array;
+    }
+    
+    /**
+     * 年月日の配列と追加する多次元配列を渡すとくわえてから返す
+     *
+     * @access private
+     * @param array $date            
+     * @param array $date_array            
+     * @param string $input_key            
+     * @param array $input_array            
+     * @return multitype:
+     */
+    private function createDateArray($date, $date_array, $input_key, $input_array)
+    {
+        if (! in_array($date['year'], $date_array))
+            $date_array[$date['year']][] = array();
+        if (! in_array($date['month'], $date_array[$date['year']]))
+            $date_array[$date['year']][$date['month']][] = array();
+        if (! in_array($date['day'], $date_array[$date['year']][$date['month']]))
+            $date_array[$date['year']][$date['month']][$date['day']][$input_key] = $input_array;
+        
+        return $date_array;
+    }
+    
 }

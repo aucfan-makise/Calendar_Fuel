@@ -39,7 +39,6 @@
                 <button id="change_calendar_size">change</button>
             </p>
         </form>
-        
         <div id="calendar_div"></div>
         
         <div id="schedule_form_div">

@@ -120,7 +120,8 @@
 				url: '/index/calendar',
 				dataType: 'html',
 				data: {selected_date : $('[name=select_date_combo]').val(),
-					start_week_day : $('[name=start_week_day]').val()},
+					start_week_day : $('[name=start_week_day]').val(),
+		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
 					$('#calendar_div').find('tr:gt(0)').remove();
 					$('#calendar_div').append(data);
@@ -134,10 +135,11 @@
 		});
 		$('#schedule_form button').click(function(event) {
             event.preventDefault();
+            var $url = '/schedule/' + $(this).attr('id');
             var $form = $('#schedule_form');
             var param = $form.serializeArray();
             $.ajax({
-                url: '/index/schedule',
+                url: $url,
                 type: 'post',
                 dataType : 'json',
                 data: {schedule_start_year : param[0].value,

@@ -48,4 +48,64 @@ class Model_Schedule extends Orm\Model {
         $insert->end_time = $end;
         $insert->save();
     }
+    
+    public static function selectSchedules($user, $start, $end){
+        $schedules = Model_Schedule::query()
+            ->select('schedules_id', 'title', 'detail', 'start_time', 'end_time')
+            ->related('relations')
+            ->related('relations.account')
+            ->where('relations.account.user_name', $user)
+            ->where('deleted_at', null)
+            ->and_where_open()
+                ->where_open()
+                    ->where('start_time', '>', $start)
+                    ->where('start_time', '<', $end)
+                ->where_close()
+                ->or_where_open()
+                    ->where('end_time', '>', $start)
+                    ->where('end_time', '<', $end)
+                ->or_where_close()
+            ->and_where_close()
+            ->get();
+        
+        $return_array = array();
+        foreach ($schedules as $schedule){
+            $r = $schedule->to_array();
+            unset($r['relations']);
+            unset($r['account']);
+            $return_array[] = $r;
+        }
+        
+        return $return_array;
+    }
+    
+    public static function selectScheduleById($user, $id){
+        $schedule = Model_Schedule::query()
+            ->select('schedules_id', 'title', 'detail', 'start_time', 'end_time')
+            ->related('relations')
+            ->related('relations.account')
+            ->where('relations.account.user_name', $user)
+            ->where('deleted_at', null)
+            ->where('schedules_id', $id)
+            ->get_one();
+        return $schedule->to_array();
+    }
+    
+    public static function existSchedule($user, $id){
+        $schedule_count = Model_Schedule::query()
+            ->select('schedules_id')
+            ->related('relations')
+            ->related('relations.account')
+            ->where('relations.account.user_name', $user)
+            ->where('deleted_at', null)
+            ->where('schedules_id', $id)
+            ->count();
+        
+        return $schedule_count === 1 ? true : false;
+    }
+    
+//     TODO:delete機能の追加
+    public static function deleteSchedule($user, $id){
+
+    }
 }
