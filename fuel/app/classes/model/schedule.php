@@ -1,4 +1,5 @@
 <?php
+use Psr\Log\NullLogger;
 class Model_Schedule extends Orm\Model {
     protected static $_table_name = 'schedules';
     protected static $_primary_key = array('schedules_id');
@@ -104,8 +105,29 @@ class Model_Schedule extends Orm\Model {
         return $schedule_count === 1 ? true : false;
     }
     
-//     TODO:delete機能の追加
     public static function deleteSchedule($user, $id){
-
+        $delete_time = \Date::Time()->format('mysql');
+        $account = Model_Account::query()
+            ->select('user_id')
+            ->where('user_name', $user)
+            ->get_one();
+        $selected_schedule = Model_Schedule::find('first', array(
+            'where' => array(
+                'schedules_id' => $id,
+                'deleted_at' => null
+            )));
+        $relations = Model_Relation::find('first', array(
+            'where' => array(
+                'user_id' => $account['user_id'],
+                'schedules_id' => $id,
+                'deleted_at' => null
+            )
+        ));
+        $relations->user_id = $account['user_id'];
+        $relations->schedules_id = $id;
+        $relations->deleted_at = $delete_time;
+        $selected_schedule->deleted_at = $delete_time;
+        $selected_schedule->save();
+        $relations->save();
     }
 }

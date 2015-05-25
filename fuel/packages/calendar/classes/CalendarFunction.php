@@ -211,9 +211,11 @@ class CalendarFunction {
         $this->public_holiday_array = $this->getPublicHolidayData($start_datetime_array, $end_datetime_array);
         $this->auction_topic_array = $this->getAucfanTopicData();
         
-        $schedule_function = new ScheduleFunction();
-        $schedule_function->validateReadOptions($read_start_date, $read_end_date);
-        $this->schedules_array = $this->convertSchedulesArray(json_decode($schedule_function->fetchSchedules()));
+        if (! is_null(\Session::get('user_name'))){
+            $schedule_function = new ScheduleFunction();
+            $schedule_function->validateReadOptions($read_start_date, $read_end_date);
+            $this->schedules_array = $this->convertSchedulesArray(json_decode($schedule_function->fetchSchedules()));
+        }
 
         for ($year = $start_datetime_array['year']; $year <= $end_datetime_array['year']; ++ $year) {
             if ($year == $start_datetime_array['year'] && $year == $end_datetime_array['year']) {

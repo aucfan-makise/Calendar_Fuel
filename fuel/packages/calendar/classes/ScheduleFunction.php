@@ -165,8 +165,6 @@ class ScheduleFunction {
         if (! ctype_digit($_POST['view_id']) || $_POST['view_id'] < 0){
             throw new \Exception('Id error.');
         }
-        echo \Model_Schedule::existSchedule(\Session::get('user_name'), $_POST['view_id']);
-        exit;
     }
     
     public function getScheduleById(){

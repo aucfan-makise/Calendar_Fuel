@@ -48,12 +48,18 @@ class Controller_Schedule extends Controller{
 	        $schedule_function->validateMode();
 	        $schedule_function->validateSchedule();
 	        $schedule_function->validateDeleteId();
+	        Model_Schedule::deleteSchedule(Session::get('user_name'), $_POST['view_id']);
+	        $response['result'] = true;
+	        $response['mode'] = $schedule_function->getMode();
 	    }catch(Exception $e){
 	        $response['result'] = false;
 	        $response['error_message'] = $e->getMessage();
-	        return json_encode($response);
 	    }
-	    
+        return json_encode($response);
+    }
+    
+//     TODO:予定の修正機能の追加
+    public function post_modify(){
         
     }
     

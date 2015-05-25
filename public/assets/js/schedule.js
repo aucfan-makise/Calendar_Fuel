@@ -11,6 +11,7 @@
 		
 		$('#calendar_div').on('click', '.schedule_link', function(){
 			$('#schedule_form_div, #schedule_form_div *:not(#register)').css('visibility', 'visible');
+			view_id = $(this).attr('id');
 			$.ajax({
 				url: '/schedule/refer_schedule_by_id',
 				type: 'post',
@@ -139,6 +140,7 @@
 	};
 	
 	function appendMinuteSelectBox(name, minute){
+	    minute = Number(minute);
 		name = name + '_minute]';
 		$(name).children().remove();
 		for(var i = 0; i <= 59; ++i){
