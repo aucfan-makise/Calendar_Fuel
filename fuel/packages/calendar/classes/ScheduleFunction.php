@@ -8,6 +8,7 @@ class ScheduleFunction {
     private $detail = '';
     private $start_datetime;
     private $end_datetime;
+    private $view_id;
     
 //     読み込み用
     private $api_start_datetime;
@@ -28,6 +29,9 @@ class ScheduleFunction {
     }
     public function getMode(){
         return $this->mode;
+    }
+    public function getViewId(){
+        return $this->view_id;
     }
     public function __construct(){
         $this->start_datetime = new \DateTime();
@@ -161,10 +165,14 @@ class ScheduleFunction {
         $this->api_id = $_POST['id'];
     }
     
-    public function validateDeleteId(){
+    public function validateViewId(){
         if (! ctype_digit($_POST['view_id']) || $_POST['view_id'] < 0){
             throw new \Exception('Id error.');
         }
+        if (! \Model_Schedule::existSchedule(\Session::get('user_name'), $_POST['view_id'])){
+            throw new \Exception('No schedule.');
+        }
+        $this->view_id = $_POST['view_id'];
     }
     
     public function getScheduleById(){

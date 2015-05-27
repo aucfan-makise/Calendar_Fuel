@@ -130,4 +130,17 @@ class Model_Schedule extends Orm\Model {
         $selected_schedule->save();
         $relations->save();
     }
+    
+    public static function modifySchedule($user, $id, $title, $detail, $start, $end){
+        $selected_schedule = Model_Schedule::find('first', array(
+            'where' => array(
+                'schedules_id' => $id,
+                'deleted_at' => null
+            )));
+        $selected_schedule->title = $title;
+        $selected_schedule->detail = $detail;
+        $selected_schedule->start_time = $start;
+        $selected_schedule->end_time = $end;
+        $selected_schedule->save();
+    }
 }

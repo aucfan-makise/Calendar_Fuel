@@ -47,7 +47,7 @@ class Controller_Schedule extends Controller{
 	        $schedule_function = new ScheduleFunction();
 	        $schedule_function->validateMode();
 	        $schedule_function->validateSchedule();
-	        $schedule_function->validateDeleteId();
+	        $schedule_function->validateViewId();
 	        Model_Schedule::deleteSchedule(Session::get('user_name'), $_POST['view_id']);
 	        $response['result'] = true;
 	        $response['mode'] = $schedule_function->getMode();
@@ -58,9 +58,29 @@ class Controller_Schedule extends Controller{
         return json_encode($response);
     }
     
-//     TODO:予定の修正機能の追加
     public function post_modify(){
+        $response = array();
         
+        try {
+            $this->access_check();
+            $schedule_function = new ScheduleFunction();
+            $schedule_function->validateMode();
+            $schedule_function->validateSchedule();
+            $schedule_function->validateViewId();
+            Model_Schedule::modifySchedule(
+    	        Session::get('user_name'),
+    	        $schedule_function->getViewId(),
+    	        $schedule_function->getTitle(),
+    	        $schedule_function->getDetail(),
+    	        $schedule_function->getStartTimeStr(),
+    	        $schedule_function->getEndTimeStr());
+            $response['result'] = true;
+            $response['mode'] = $schedule_function->getMode();
+        }catch(Exception $e){
+            $response['result'] = false;
+            $response['error_message'] = $e->getMessage();
+        }
+        return json_encode($response);
     }
     
     public function post_refer_schedule_by_id(){

@@ -119,7 +119,7 @@
 				type: 'GET',
 				url: '/index/calendar',
 				dataType: 'html',
-				data: {selected_date : $('[name=select_date_combo]').val(),
+				data: {select_date : $('[name=select_date_combo]').val(),
 					start_week_day : $('[name=start_week_day]').val(),
 		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
