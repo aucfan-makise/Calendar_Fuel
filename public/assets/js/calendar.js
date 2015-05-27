@@ -2,18 +2,6 @@
 	$(function(){
 		initialize();
 
-		$.ajax({
-			type: 'GET',
-			url: '/index/calendar',
-			dataType: 'html',
-			success: function(data){
-				$('#calendar_div').append(data);
-			},
-			error:function() {
-				alert('Ajax error.');
-            			}
-		});
-		
 		$('[name=select_date_before]').click(function(){
 			$.ajax({
 				type: 'GET',

@@ -34,11 +34,12 @@ class Controller_Index extends Controller
 	public function action_index()
 	{
 	    if (is_null(Session::instance())) Session::create();
-	    $index_presenter = Presenter::forge('calendar/index');
+	    $index_view = View::forge('calendar/index');
 	    if (! is_null(Session::get('user_name'))){
-	        $index_presenter->user_name = Session::get('user_name');
+	        $index_view->user_name = Session::get('user_name');
 	    }
-	    return Response::forge($index_presenter);
+	    $index_view->calendar = $this->action_calendar();
+	    return Response::forge($index_view);
 	}
 	
 	public function action_calendar(){

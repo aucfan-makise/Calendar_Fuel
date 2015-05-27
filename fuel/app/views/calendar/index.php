@@ -39,7 +39,7 @@
                 <button id="change_calendar_size">change</button>
             </p>
         </form>
-        <div id="calendar_div"></div>
+        <div id="calendar_div"><?php echo $calendar; ?></div>
         
         <div id="schedule_form_div">
             <form id="schedule_form">
