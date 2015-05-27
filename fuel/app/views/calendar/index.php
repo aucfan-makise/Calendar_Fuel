@@ -79,6 +79,6 @@
             <div id="schedule_form_finish_message"></div>
             <button id="schedule_form_finish_div_close">閉じる</button>
         </div>
-        <div id="loading"><?php echo Asset::img('loading.gif'); ?></div>
+        <div id="loading"><?php echo Asset::img('loading.gif', array('id' => 'loading_img')); ?></div>
 </body>
 </html>

@@ -131,8 +131,6 @@ td.calendar_week_column {
 	border: 10px ridge;
 	background-color: white;
 	position: fixed;
-	top: 200px;
-	left: 300px;
 	width: 650px;
 	height: 310px;
 	visibility: hidden;
@@ -141,8 +139,6 @@ td.calendar_week_column {
 	border: 10px ridge;
 	background-color: white;
 	position: fixed;
-	top: 200px;
-	left: 300px;
 	width: 650px;
 	height: 310px;
 	visibility: hidden;
@@ -160,6 +156,4 @@ td.calendar_week_column {
 #loading {
 	position: fixed;
 	visibility: hidden;
-	top: 50px;
-	left: 300px;
 }
