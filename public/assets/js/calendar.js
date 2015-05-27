@@ -3,6 +3,7 @@
 		initialize();
 
 		$('[name=select_date_before]').click(function(){
+		    $('#loading').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -12,8 +13,7 @@
 		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
 					if($('[name=select_date_before]').val() != ''){
-						$('#calendar_div').find('tr:gt(0)').remove();
-						$('#calendar_div').append(data);
+					    tableReload(data);
 						var date = $('[name=select_date_before]').val();
 						changeMoveButtonValue(date);
 						$('[name=select_date_combo]').val(date);
@@ -21,10 +21,14 @@
 				},
 				error:function() {
 					alert('Ajax error.');
+				},
+				complete: function(data) {
+				    $('#loading').css('visibility', 'hidden');
 				}
 			})
 		})
 		$('[name=select_date_next]').click(function(){
+		    $('#loading').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -34,8 +38,7 @@
 		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
 					if($('[name=select_date_next]').val() != ''){
-						$('#calendar_div').find('tr:gt(0)').remove();
-						$('#calendar_div').append(data);
+					    tableReload(data);
 						var date = $('[name=select_date_next]').val();
 						changeMoveButtonValue(date);
 						$('[name=select_date_combo]').val(date);
@@ -43,10 +46,14 @@
 				},
 				error:function() {
 					alert('Ajax error.');
+				},
+				complete: function(data) {
+				    $('#loading').css('visibility', 'hidden');
 				}
 			})
 		});
 		$('[name=select_date_combo]').change(function(){
+		    $('#loading').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -55,17 +62,20 @@
 					start_week_day : $('[name=start_week_day]').val(),
 		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
-					$('#calendar_div').find('tr:gt(0)').remove();
-					$('#calendar_div').append(data);
+				    tableReload(data);
 					var date = $('[name=select_date_combo]').val();
 					changeMoveButtonValue(date);
 				},
 				error:function() {
 					alert('Ajax error.');
+				},
+				complete: function(data) {
+				    $('#loading').css('visibility', 'hidden');
 				}
 			})
 		});
 		$('[name=start_week_day]').change(function(){
+		    $('#loading').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -74,16 +84,19 @@
 					start_week_day : $('[name=start_week_day]').val(),
 		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
-					$('#calendar_div').find('tr:gt(0)').remove();
-					$('#calendar_div').append(data);
+				    tableReload(data);
 				},
 				error:function() {
 					alert('Ajax error.');
+				},
+				complete: function(data) {
+				    $('#loading').css('visibility', 'hidden');
 				}
 			})
 		});
 		$('#change_calendar_size').click(function(event){
             event.preventDefault();
+		    $('#loading').css('visibility', 'visible');
 		    $.ajax({
 		        type: 'GET',
 		        url: '/index/calendar',
@@ -92,17 +105,20 @@
 		            start_week_day : $('[name=start_week_day]').val(),
 		            calendar_size : $('[name=calendar_size]').val()},
 		        success: function(data){
-		            $('#calendar_div').find('tr:gt(0)').remove();
-		            $('#calendar_div').append(data);
+				    tableReload(data);
 		        },
 		        error:function() {
 		            alert('Ajax error.');
-		        }
+		        },
+				complete: function(data) {
+				    $('#loading').css('visibility', 'hidden');
+				}
 		    })
 		});
 		
 		$('#schedule_form_finish_div_close').click(function(){
-			$('#schedule_form_finish_div').css('visibility', 'hidden');
+			$('#overlay, #schedule_form_finish_div').css('visibility', 'hidden');
+		    $('#loading').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -111,15 +127,18 @@
 					start_week_day : $('[name=start_week_day]').val(),
 		            calendar_size : $('[name=calendar_size]').val()},
 				success: function(data){
-					$('#calendar_div').find('tr:gt(0)').remove();
-					$('#calendar_div').append(data);
+				    tableReload(data);
 					$('#schedule_title').val('');
 					$('#schedule_detail').val('');
 				},
 				error:function() {
 					alert('Ajax error.');
+				},
+				complete: function(data) {
+				    $('#loading').css('visibility', 'hidden');
 				}
 			});
+			$('#main-window').css('opacity', '1,0');
 		});
 		$('#schedule_form button').click(function(event) {
             event.preventDefault();
@@ -181,6 +200,7 @@
 	    $('[name=start_week_day]').val('0');
 	    appendComboBox();
 	    $('[name=calendar_size]').val('3');
+	    $('#overlay').css('height', $(window).height()).css('width', $(window).width());
 	}
 	function initializeMoveButton(){
 		var date = new Date();
@@ -192,6 +212,12 @@
 		$('[name=select_date_before]').val(before_month.getFullYear() + '-' + (before_month.getMonth() + 1));
 		$('[name=select_date_next]').val(next_month.getFullYear() + '-' + (next_month.getMonth() + 1));
 		
+	}
+	function tableReload(table){
+		$('#calendar_div').find('tr:gt(0)').remove();
+		$('#calendar_div').append(table);
+		$('html, body').css('height', '100%');
+	    
 	}
 	function changeMoveButtonValue(date){
 		var date_array = date.split('-');

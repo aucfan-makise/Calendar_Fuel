@@ -131,7 +131,7 @@ class ScheduleFunction {
         if (! checkdate($month, $day, $year)){
             throw new \Exception('日付が不正です。');
         }
-        if ($year < 2015 || 2018 < $year)
+        if ($year < 2014 || 2018 < $year)
             throw new \Exception("年が不正です。");
     }
     

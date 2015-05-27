@@ -2,15 +2,14 @@
 		$(function(){
 			
 		$('#calendar_div').on('click', '.schedule_registration', function(){
-			$('#schedule_form_div, #schedule_form_div *:not(#delete, #modify)').css('visibility', 'visible');
+			$('#overlay, #schedule_form_div, #schedule_form_div *:not(#delete, #modify)').css('visibility', 'visible');
 			$('#modify, #delete').css('visibility', 'hidden');
 			var date = $(this).attr('id');
 			initializeSelectBox(date);
-			
 		});
 		
 		$('#calendar_div').on('click', '.schedule_link', function(){
-			$('#schedule_form_div, #schedule_form_div *:not(#register)').css('visibility', 'visible');
+			$('#overlay, #schedule_form_div, #schedule_form_div *:not(#register)').css('visibility', 'visible');
 			view_id = $(this).attr('id');
 			$.ajax({
 				url: '/schedule/refer_schedule_by_id',
@@ -58,14 +57,22 @@
 		});
 		
 
-				$('#schedule_form_close').click(function(){
-			$('#schedule_form_div, #schedule_form_div *').css('visibility', 'hidden');
-			$('#schedule_title, #schedule_detail').val('');
-			$('#register').attr('disabled', false);
-			$('#error_message').text('');
+		$('#schedule_form_close').click(function(){
+		    scheduleWindowClose();
+		});
+		$('#overlay').click(function(){
+		    if($('#schedule_form_finish_div').css('visibility') != 'visible'){
+		        scheduleWindowClose();
+		    }
 		});
 	});
 
+	function scheduleWindowClose(){
+		$('#overlay, #schedule_form_div, #schedule_form_div *').css('visibility', 'hidden');
+		$('#schedule_title, #schedule_detail').val('');
+		$('#register').attr('disabled', false);
+		$('#error_message').text('');
+	}
 	function initializeSelectBox(date){
 		appendDateSelectBox('[name=schedule_start', date);
 		appendDateSelectBox('[name=schedule_end', date);
@@ -92,7 +99,7 @@
 	function appendYearSelectBox(name, year){
 		name = name + '_year]';
 		$(name).children().remove();
-		for(var i = 2015; i < 2019; ++i){
+		for(var i = 2014; i < 2019; ++i){
 			$(name).append($('<option>').html(i).val(i));
 		}
         $(name).val(year);

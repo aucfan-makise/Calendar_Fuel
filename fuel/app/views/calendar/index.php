@@ -40,7 +40,7 @@
             </p>
         </form>
         <div id="calendar_div"><?php echo $calendar; ?></div>
-        
+        <div id="overlay"></div>
         <div id="schedule_form_div">
             <form id="schedule_form">
                 <p>
@@ -79,5 +79,6 @@
             <div id="schedule_form_finish_message"></div>
             <button id="schedule_form_finish_div_close">閉じる</button>
         </div>
+        <div id="loading"><?php echo Asset::img('loading.gif'); ?></div>
 </body>
 </html>

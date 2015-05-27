@@ -130,7 +130,7 @@ td.calendar_week_column {
 #schedule_form_div {
 	border: 10px ridge;
 	background-color: white;
-	position: absolute;
+	position: fixed;
 	top: 200px;
 	left: 300px;
 	width: 650px;
@@ -140,10 +140,26 @@ td.calendar_week_column {
 #schedule_form_finish_div {
 	border: 10px ridge;
 	background-color: white;
-	position: absolute;
+	position: fixed;
 	top: 200px;
 	left: 300px;
 	width: 650px;
 	height: 310px;
 	visibility: hidden;
+}
+#overlay {
+	background-color: black;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 120%;
+	height: 120%;
+	opacity: 0.5;
+	visibility: hidden;
+}
+#loading {
+	position: fixed;
+	visibility: hidden;
+	top: 50px;
+	left: 300px;
 }
