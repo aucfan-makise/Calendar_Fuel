@@ -7,7 +7,14 @@
 			var date = $(this).attr('id');
 			initializeSelectBox(date);
 		});
-		
+		$('.day_column').on({
+		    'mouseenter':function(){
+		        $(this).css('background-color', 'yellow');
+		    },
+		    'mouseleave':function(){
+		        $(this).css('background-color', 'white');
+		    }
+		});
 		$('#calendar_div').on('click', '.schedule_link', function(){
 			$('#overlay, #schedule_form_div, #schedule_form_div *:not(#register)').css('visibility', 'visible');
 			view_id = $(this).attr('id');

@@ -16,7 +16,7 @@
         <?php if ($day['week_day'] == $start_week_day): ?>
     <tr>
         <?php endif; ?>
-	    <td>   
+	    <td class="day_column">   
 		    <div class=<?php echo $day['div_class']; ?>>
 			    <a id="<?php echo $day['datetime']->format('Y-n-j'); ?>" class="schedule_registration"></a>
 				<div>
