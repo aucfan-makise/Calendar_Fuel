@@ -30,18 +30,9 @@
 				    $('#register').css('visibility', 'hidden');
 				},
 				success: function(data){
-				    item = data['response']['items'][0];
-				    start_datetime_array = item['start_time'].split(' ');
-				    start_time_array = start_datetime_array[1].split(':');
-				    appendDateSelectBox('[name=schedule_start', start_datetime_array[0]);
-				    appendHourSelectBox('[name=schedule_start', start_time_array[0]);
-				    appendMinuteSelectBox('[name=schedule_start', start_time_array[1]);
-
-				    end_datetime_array = item['end_time'].split(' ');
-				    end_time_array = end_datetime_array[1].split(':');
-				    appendDateSelectBox('[name=schedule_end', end_datetime_array[0]);
-				    appendHourSelectBox('[name=schedule_end', end_time_array[0]);
-				    appendMinuteSelectBox('[name=schedule_end', end_time_array[1]);
+				    var item = data['response']['items'][0];
+				    appendDateTimeSelectBox('[name=schedule_start', item['start_time']);
+				    appendDateTimeSelectBox('[name=schedule_end', item['end_time']);
 				    
 				    $('#schedule_title').val(item['title']);
 				    $('#schedule_detail').val(item['detail']);
@@ -79,93 +70,72 @@
 		    }
 		});
 	});
-
+	function initializeSelectBox(selected_date){
+	    var date_array = parseDateTimeStr(selected_date);
+	    appendDateSelectBox('[name=schedule_start', date_array[0], date_array[1], date_array[2]);
+	    appendDateSelectBox('[name=schedule_end', date_array[0], date_array[1], date_array[2]);
+	    
+	    var now = new Date();
+	    appendTimeSelectBox('[name=schedule_start', now.getHours(), now.getMinutes());
+	    appendTimeSelectBox('[name=schedule_end', now.getHours(), now.getMinutes());
+	};
+	function parseDateTimeStr(datetime_str){
+	    var datetime_array = datetime_str.split(' ');
+	    var date_array = datetime_array[0].split('-');
+	    
+	    if(typeof datetime_array[1] !== 'undefined'){
+		    var time_array = datetime_array[1].split(':');
+	    }
+	    return date_array.concat(time_array);
+	}
 	function scheduleWindowClose(){
 		$('#overlay, #schedule_form_div, #schedule_form_div *').css('visibility', 'hidden');
 		$('#schedule_title, #schedule_detail').val('');
 		$('#register').prop('disabled', false);
 		$('#error_message').text('');
 	}
-	function initializeSelectBox(date){
-		appendDateSelectBox('[name=schedule_start', date);
-		appendDateSelectBox('[name=schedule_end', date);
-		
-		appendTimeSelectBox('[name=schedule_start');
-		appendTimeSelectBox('[name=schedule_end');
-	};
 
 	function changeSelectBox(name){
 		name = '[name=schedule_' + name;
-		date_array = new Array($(name+'_year]').val(), $(name+'_month]').val(), $(name+'_day]').val());
-		appendDaySelectBox(name, date_array);
+		appendDaySelectBox(name, $(name+'_year]').val(), $(name+'_month]').val(), $(name+'_day]').val());
 	}
 
-	function appendDateSelectBox(name, date){
-		date_array = date.split('-');
-		date_array[1] = Number(date_array[1]);
-		date_array[2] = Number(date_array[2]);
-		appendYearSelectBox(name, date_array[0]);
-		appendMonthSelectBox(name, date_array[1]);
-		appendDaySelectBox(name, date_array);
-	};
-	
-	function appendYearSelectBox(name, year){
-		name = name + '_year]';
-		$(name).children().remove();
-		for(var i = 2014; i < 2019; ++i){
-			$(name).append($('<option>').html(i).val(i));
-		}
-        $(name).val(year);
-	};
-	
-	function appendMonthSelectBox(name, month){
-	    name = name + '_month]';
-		$(name).children().remove();
-		for(var i = 1; i <= 12; ++i){
-			$(name).append($('<option>').html(i).val(i));
-		}
-        $(name).val(month);
-	};
-	
-	function appendDaySelectBox(name, date_array){
-		name = name + '_day]';
-		$before_selected = $(name).val();
-		$(name).children().remove();
-		var date = new Date(date_array[0], date_array[1], 0);
-		var last_day = date.getDate();
-		for(var i = 1; i <= last_day; ++i){
-			$(name).append($('<option>').html(i).val(i));
-		}
+	function appendDateTimeSelectBox(name, datetime_str){
+	    var date_array = parseDateTimeStr(datetime_str);
+	    appendDateSelectBox(name, date_array[0], date_array[1], date_array[2]);
+	    appendTimeSelectBox(name, date_array[3], date_array[4]);
+	}
+	function appendDateSelectBox(name, year, month, day){
+		var selected_year = Number(year);
+		var selected_month = Number(month);
 		
-		if($before_selected > last_day){
-			$(name).val(last_day);
-		}else{
-			$(name).val(date_array[2]);
-		}
+	    appendSelectBox(name, '_year]', selected_year, 2014, 2019);
+	    appendSelectBox(name, '_month]', selected_month, 1, 12);
+		appendDaySelectBox(name, year, month, day);
 	};
 	
-	function appendTimeSelectBox(name){
-		var date = new Date();
-		appendHourSelectBox(name, date.getHours());
-		appendMinuteSelectBox(name, date.getMinutes());
+	function appendDaySelectBox(name, year, month, day){
+	    var before_selected_day = Number(day);
+		var date = new Date(year, month, 0);
+		var last_day = date.getDate();
+		var selected_day = before_selected_day > last_day ? last_day : before_selected_day;
+		
+		appendSelectBox(name, '_day]', selected_day, 1, last_day);
+	};
+	
+	function appendTimeSelectBox(name, selected_hour, selected_minute){
+		appendSelectBox(name, '_hour]', selected_hour, 0, 23);
+		appendSelectBox(name, '_minute]', selected_minute, 0, 59);
+	}
+	function appendSelectBox(name, plus_name, select, start, end){
+	    var selecter = name + plus_name;
+	    $(selecter).children().remove();
+	    $(selecter).append(createOptionsArray(start, end));
+	    $(selecter).val(select);
 	}
 	
-	function appendHourSelectBox(name, hour){
-		name = name + '_hour]';
-		$(name).children().remove();
-		for(var i = 0; i <= 23; ++i){
-			$(name).append($('<option>').html(i).val(i));
-		}
-		$(name).val(hour);
-	};
-	
-	function appendMinuteSelectBox(name, minute){
-	    minute = Number(minute);
-		name = name + '_minute]';
-		$(name).children().remove();
-		for(var i = 0; i <= 59; ++i){
-			$(name).append($('<option>').html(i).val(i));
-		}
-		$(name).val(minute);
-	};
+	function createOptionsArray(start, end){
+	    var array = [$('<option>').html(start).val(start)];
+	    return start == end ? array : array.concat(createOptionsArray(start + 1, end));
+	}
 })();
