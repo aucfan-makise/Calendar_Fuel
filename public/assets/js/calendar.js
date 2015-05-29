@@ -6,6 +6,7 @@
 		});
 		$(window).resize(function(){
 		    objectCentering(); 
+		    resizeCalendar();
 		});
 		$('[name=select_date_before]').click(function(){
 		    $('#loading, #overlay').css('visibility', 'visible');
@@ -29,6 +30,7 @@
 				},
 				complete: function(data) {
 				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		})
@@ -54,6 +56,7 @@
 				},
 				complete: function(data) {
 				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		});
@@ -76,6 +79,7 @@
 				},
 				complete: function(data) {
 				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		});
@@ -96,6 +100,7 @@
 				},
 				complete: function(data) {
 				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		});
@@ -117,6 +122,7 @@
 		        },
 				complete: function(data) {
 				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 		    })
 		});
@@ -172,7 +178,7 @@
                     },
                 
                 beforeSend: function(xhr, settings){
-                    $('#register, #modify, #delete').attr('disabled', true);
+                    $('#register, #modify, #delete').prop('disabled', true);
                 },
                 success: function(data){
                     if(data.result === true){
@@ -190,11 +196,11 @@
                     }else {
                         $('#error_message').text(data.error_message);
                     }
-                    $('#register, #modify, #delete').attr('disabled', false);
+                    $('#register, #modify, #delete').prop('disabled', false);
                 },
                 error: function(xhr, textStatus, error){
                     alert('Ajax Error.'+error);
-                    $('#register, #modify, #delete').attr('disabled', false);
+                    $('#register, #modify, #delete').prop('disabled', false);
                 }
             });
         });
@@ -206,6 +212,8 @@
 	    appendComboBox();
 	    $('[name=calendar_size]').val('3');
 	    objectCentering();
+		paintTableEvenRow();
+		resizeCalendar();
 	}
 	function objectCentering(){
 	    setPosition('#overlay');
@@ -220,6 +228,16 @@
 	    $(target).css('left', left);
 	    $(target).css('top', top);
 	}
+	function resizeCalendar(){
+	    var window_width = $('#calendar_div').innerWidth();
+	    var calendar_padding = $('#calendar td').css('padding-left') + $('#calendar td').css('padding-right');
+	    $('#calendar').width(window_width - calendar_padding * $('[name=calendar_size]').val());
+	    if($('[name=calendar_size]').val() >= 3){
+	        $('.calendar_table').css('width', (window_width / 3));
+	    } else {
+	        $('.calendar_table').css('width', window_width / $('[name=calendar_size]').val());
+	    }
+	}
 	function initializeMoveButton(){
 		var date = new Date();
 		next_month = new Date();
@@ -232,9 +250,19 @@
 		
 	}
 	function tableReload(table){
-		$('#calendar_div').find('tr:gt(0)').remove();
+	    $('#calendar').remove();
 		$('#calendar_div').append(table);
+		paintTableEvenRow();
+	}
+	function paintTableEvenRow(){
+	    rows_array = $('.calendar_table').find('tr:gt(0)');
 	    
+	    row_num = 0;
+	    $.each(rows_array, function(){
+	        if($(this).attr('class') == 'calendar_week_row') row_num = 0;
+	        if(row_num % 2 == 0 && row_num != 0) $(this).css('background-color', 'gainsboro');
+	        row_num++;
+	    })
 	}
 	function changeMoveButtonValue(date){
 		var date_array = date.split('-');
@@ -246,16 +274,16 @@
         date_obj.setMonth(date_obj.getMonth());
         date_obj.setMonth(date_obj.getMonth() - Number(2));
         if (date_obj < under_limit) {
-            $('[name=select_date_before]').val('').attr('disabled', true);
+            $('[name=select_date_before]').val('').prop('disabled', true);
         } else {
-            $('[name=select_date_before]').attr('disabled', false).val(
+            $('[name=select_date_before]').prop('disabled', false).val(
                     date_obj.getFullYear() + '-' + (date_obj.getMonth() + 1));
         }
         date_obj.setMonth(date_obj.getMonth() + Number(2));
         if (date_obj > over_limit) {
-            $('[name=select_date_next]').val('').attr('disabled', true);
+            $('[name=select_date_next]').val('').prop('disabled', true);
         } else {
-            $('[name=select_date_next]').attr('disabled', false).val(
+            $('[name=select_date_next]').prop('disabled', false).val(
                     date_obj.getFullYear() + '-' + (date_obj.getMonth() + 1));
         }
     }

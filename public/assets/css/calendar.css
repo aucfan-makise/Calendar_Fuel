@@ -1,4 +1,5 @@
 #calendar{
+	border-collapse: collapse;
 	width: 100%;
 }
 
@@ -6,7 +7,6 @@
 	border-collapse: separate;
 	border-spacing: 0;
 	border-right: 1px solid;
-	width: 100px;
 }
 
 .calendar_table td {

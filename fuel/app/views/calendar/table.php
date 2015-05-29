@@ -11,7 +11,6 @@
             </td>
         <?php endforeach; ?>
     </tr>
-    <tr>
     <?php foreach ($calendar_array as $day): ?>
         <?php if ($day['week_day'] == $start_week_day): ?>
     <tr>
@@ -26,7 +25,7 @@
 		    </div>
 		    <div class="calendar_schedule_div">
 		      <?php foreach ($day['aucfan_topic'] as $topic): ?>
-		          <a href="<?php echo $topic['link']; ?>"><?php echo $topic['title']; ?></a>
+		          <a href="<?php echo $topic['link']; ?>"><?php echo $topic['title']; ?></a><br>
 		      <?php endforeach; ?>
 		      <?php if (isset($day['schedules'])): ?>
 		          <?php foreach ($day['schedules'] as $id => $schedule_array): ?>

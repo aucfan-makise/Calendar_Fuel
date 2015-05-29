@@ -2,27 +2,33 @@
 		$(function(){
 			
 		$('#calendar_div').on('click', '.schedule_registration', function(){
+		    if($('#login_link')[0]) {
+		        window.location.href = '/index/login';
+		        return;
+		    }
 			$('#overlay, #schedule_form_div, #schedule_form_div *:not(#delete, #modify)').css('visibility', 'visible');
 			$('#modify, #delete').css('visibility', 'hidden');
 			var date = $(this).attr('id');
 			initializeSelectBox(date);
 		});
-		$('.day_column').on({
-		    'mouseenter':function(){
-		        $(this).css('background-color', 'yellow');
-		    },
-		    'mouseleave':function(){
-		        $(this).css('background-color', 'white');
-		    }
+		$('#calendar_div').on('mouseenter', '.day_column', function(){
+			$(this).css('background-color', 'yellow');
+		});
+		$('#calendar_div').on('mouseleave', '.day_column', function(){
+			$(this).css('background-color', '');
 		});
 		$('#calendar_div').on('click', '.schedule_link', function(){
-			$('#overlay, #schedule_form_div, #schedule_form_div *:not(#register)').css('visibility', 'visible');
 			view_id = $(this).attr('id');
 			$.ajax({
 				url: '/schedule/refer_schedule_by_id',
 				type: 'post',
 				dataType: 'json',
 				data: {id : $(this).attr('id')},
+				beforeSend: function(){
+				    $('#schedule_form button').prop('disabled', true);
+				    $('#overlay, #schedule_form_div, #schedule_form_div *:not(#register)').css('visibility', 'visible');
+				    $('#register').css('visibility', 'hidden');
+				},
 				success: function(data){
 				    item = data['response']['items'][0];
 				    start_datetime_array = item['start_time'].split(' ');
@@ -40,13 +46,13 @@
 				    $('#schedule_title').val(item['title']);
 				    $('#schedule_detail').val(item['detail']);
 					$('#view_id').val(view_id);
-					$('#register').css('visibility', 'hidden');
-					$('#schedule_form_div, #modify, #delete').css('visibility', 'visible');
 				},
 				error: function(xhr, textStatus, error){
 					alert('Ajax Error.'+param);
-					$('#register').attr('disabled', false);
-				}
+				},
+				complete: function(data){
+					$('#schedule_form button').prop('disabled', false);
+				} 
 			})
 		});
 		
@@ -77,7 +83,7 @@
 	function scheduleWindowClose(){
 		$('#overlay, #schedule_form_div, #schedule_form_div *').css('visibility', 'hidden');
 		$('#schedule_title, #schedule_detail').val('');
-		$('#register').attr('disabled', false);
+		$('#register').prop('disabled', false);
 		$('#error_message').text('');
 	}
 	function initializeSelectBox(date){
