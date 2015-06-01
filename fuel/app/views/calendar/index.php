@@ -16,7 +16,7 @@
         User:<?php echo $user_name; ?>
         <a href="/index/logout">ログアウト</a>
     <?php else: ?>
-        <a href="/index/login">ログイン</a>
+        <a id="login_link" href="/index/login">ログイン</a>
         <a href="/index/account_registration">新規登録</a>
     <?php endif; ?>
     <br>
@@ -79,6 +79,6 @@
             <div id="schedule_form_finish_message"></div>
             <button id="schedule_form_finish_div_close">閉じる</button>
         </div>
-        <div id="loading"><?php echo Asset::img('loading.gif'); ?></div>
+        <div id="loading"><?php echo Asset::img('loading.gif', array('id' => 'loading_img')); ?></div>
 </body>
 </html>

@@ -1,9 +1,15 @@
 (function(){
 	$(function(){
 		initialize();
-
+		$(document).load(function(){
+		    objectCentering();
+		});
+		$(window).resize(function(){
+		    objectCentering(); 
+		    resizeCalendar();
+		});
 		$('[name=select_date_before]').click(function(){
-		    $('#loading').css('visibility', 'visible');
+		    $('#loading, #overlay').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -23,12 +29,13 @@
 					alert('Ajax error.');
 				},
 				complete: function(data) {
-				    $('#loading').css('visibility', 'hidden');
+				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		})
 		$('[name=select_date_next]').click(function(){
-		    $('#loading').css('visibility', 'visible');
+		    $('#loading, #overlay').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -48,12 +55,13 @@
 					alert('Ajax error.');
 				},
 				complete: function(data) {
-				    $('#loading').css('visibility', 'hidden');
+				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		});
 		$('[name=select_date_combo]').change(function(){
-		    $('#loading').css('visibility', 'visible');
+		    $('#loading, #overlay').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -70,12 +78,13 @@
 					alert('Ajax error.');
 				},
 				complete: function(data) {
-				    $('#loading').css('visibility', 'hidden');
+				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		});
 		$('[name=start_week_day]').change(function(){
-		    $('#loading').css('visibility', 'visible');
+		    $('#loading, #overlay').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -90,13 +99,14 @@
 					alert('Ajax error.');
 				},
 				complete: function(data) {
-				    $('#loading').css('visibility', 'hidden');
+				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 			})
 		});
 		$('#change_calendar_size').click(function(event){
             event.preventDefault();
-		    $('#loading').css('visibility', 'visible');
+		    $('#loading, #overlay').css('visibility', 'visible');
 		    $.ajax({
 		        type: 'GET',
 		        url: '/index/calendar',
@@ -111,14 +121,15 @@
 		            alert('Ajax error.');
 		        },
 				complete: function(data) {
-				    $('#loading').css('visibility', 'hidden');
+				    $('#loading, #overlay').css('visibility', 'hidden');
+				    resizeCalendar();
 				}
 		    })
 		});
 		
 		$('#schedule_form_finish_div_close').click(function(){
 			$('#overlay, #schedule_form_finish_div').css('visibility', 'hidden');
-		    $('#loading').css('visibility', 'visible');
+		    $('#loading, #overlay').css('visibility', 'visible');
 			$.ajax({
 				type: 'GET',
 				url: '/index/calendar',
@@ -135,7 +146,7 @@
 					alert('Ajax error.');
 				},
 				complete: function(data) {
-				    $('#loading').css('visibility', 'hidden');
+				    $('#loading, #overlay').css('visibility', 'hidden');
 				}
 			});
 			$('#main-window').css('opacity', '1,0');
@@ -167,7 +178,7 @@
                     },
                 
                 beforeSend: function(xhr, settings){
-                    $('#register, #modify, #delete').attr('disabled', true);
+                    $('#register, #modify, #delete').prop('disabled', true);
                 },
                 success: function(data){
                     if(data.result === true){
@@ -185,11 +196,11 @@
                     }else {
                         $('#error_message').text(data.error_message);
                     }
-                    $('#register, #modify, #delete').attr('disabled', false);
+                    $('#register, #modify, #delete').prop('disabled', false);
                 },
                 error: function(xhr, textStatus, error){
                     alert('Ajax Error.'+error);
-                    $('#register, #modify, #delete').attr('disabled', false);
+                    $('#register, #modify, #delete').prop('disabled', false);
                 }
             });
         });
@@ -200,7 +211,32 @@
 	    $('[name=start_week_day]').val('0');
 	    appendComboBox();
 	    $('[name=calendar_size]').val('3');
-	    $('#overlay').css('height', $(window).height()).css('width', $(window).width());
+	    objectCentering();
+		paintTableEvenRow();
+		resizeCalendar();
+	}
+	function objectCentering(){
+	    setPosition('#overlay');
+	    setPosition('#schedule_form_div');
+	    setPosition('#schedule_form_finish_div');
+	    setPosition('#loading');
+	}
+	function setPosition(target){
+	    var left = Math.floor(($(window).width() - $(target).width()) / 2);
+	    var top = Math.floor(($(window).height() - $(target).height()) / 2);
+	    
+	    $(target).css('left', left);
+	    $(target).css('top', top);
+	}
+	function resizeCalendar(){
+	    var window_width = $('#calendar_div').innerWidth();
+	    var calendar_padding = $('#calendar td').css('padding-left') + $('#calendar td').css('padding-right');
+	    $('#calendar').width(window_width - calendar_padding * $('[name=calendar_size]').val());
+	    if($('[name=calendar_size]').val() >= 3){
+	        $('.calendar_table').css('width', (window_width / 3));
+	    } else {
+	        $('.calendar_table').css('width', window_width / $('[name=calendar_size]').val());
+	    }
 	}
 	function initializeMoveButton(){
 		var date = new Date();
@@ -214,10 +250,19 @@
 		
 	}
 	function tableReload(table){
-		$('#calendar_div').find('tr:gt(0)').remove();
+	    $('#calendar').remove();
 		$('#calendar_div').append(table);
-		$('html, body').css('height', '100%');
+		paintTableEvenRow();
+	}
+	function paintTableEvenRow(){
+	    rows_array = $('.calendar_table').find('tr:gt(0)');
 	    
+	    row_num = 0;
+	    $.each(rows_array, function(){
+	        if($(this).attr('class') == 'calendar_week_row') row_num = 0;
+	        if(row_num % 2 == 0 && row_num != 0) $(this).css('background-color', 'gainsboro');
+	        row_num++;
+	    })
 	}
 	function changeMoveButtonValue(date){
 		var date_array = date.split('-');
@@ -229,16 +274,16 @@
         date_obj.setMonth(date_obj.getMonth());
         date_obj.setMonth(date_obj.getMonth() - Number(2));
         if (date_obj < under_limit) {
-            $('[name=select_date_before]').val('').attr('disabled', true);
+            $('[name=select_date_before]').val('').prop('disabled', true);
         } else {
-            $('[name=select_date_before]').attr('disabled', false).val(
+            $('[name=select_date_before]').prop('disabled', false).val(
                     date_obj.getFullYear() + '-' + (date_obj.getMonth() + 1));
         }
         date_obj.setMonth(date_obj.getMonth() + Number(2));
         if (date_obj > over_limit) {
-            $('[name=select_date_next]').val('').attr('disabled', true);
+            $('[name=select_date_next]').val('').prop('disabled', true);
         } else {
-            $('[name=select_date_next]').attr('disabled', false).val(
+            $('[name=select_date_next]').prop('disabled', false).val(
                     date_obj.getFullYear() + '-' + (date_obj.getMonth() + 1));
         }
     }

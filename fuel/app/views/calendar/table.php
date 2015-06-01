@@ -11,12 +11,11 @@
             </td>
         <?php endforeach; ?>
     </tr>
-    <tr>
     <?php foreach ($calendar_array as $day): ?>
         <?php if ($day['week_day'] == $start_week_day): ?>
     <tr>
         <?php endif; ?>
-	    <td>   
+	    <td class="day_column">   
 		    <div class=<?php echo $day['div_class']; ?>>
 			    <a id="<?php echo $day['datetime']->format('Y-n-j'); ?>" class="schedule_registration"></a>
 				<div>
@@ -26,7 +25,7 @@
 		    </div>
 		    <div class="calendar_schedule_div">
 		      <?php foreach ($day['aucfan_topic'] as $topic): ?>
-		          <a href="<?php echo $topic['link']; ?>"><?php echo $topic['title']; ?></a>
+		          <a href="<?php echo $topic['link']; ?>"><?php echo $topic['title']; ?></a><br>
 		      <?php endforeach; ?>
 		      <?php if (isset($day['schedules'])): ?>
 		          <?php foreach ($day['schedules'] as $id => $schedule_array): ?>

@@ -1,4 +1,5 @@
 #calendar{
+	border-collapse: collapse;
 	width: 100%;
 }
 
@@ -6,7 +7,6 @@
 	border-collapse: separate;
 	border-spacing: 0;
 	border-right: 1px solid;
-	width: 100px;
 }
 
 .calendar_table td {
@@ -48,6 +48,7 @@ td.calendar_week_column {
 	position: relative;
 	height: 15px;
 	font-size: 9px;
+	cursor: pointer;
 }
 .calendar_date_div a{
 	display: block;
@@ -62,6 +63,7 @@ td.calendar_week_column {
 	height: 15px;
 	background-color: #FC8F8F;
 	font-size: 9px;
+	cursor: pointer;
 }
 .calendar_sunday_div a{
 	display: block;
@@ -76,6 +78,7 @@ td.calendar_week_column {
 	height: 15px;
 	font-size: 9px;
 	background-color: #90EE90;
+	cursor: pointer;
 }
 .calendar_saturday_div a{
 	display: block;
@@ -91,6 +94,7 @@ td.calendar_week_column {
 	overflow: hidden;
 	font-size: 9px;
 	background-color: #AFEEEE;
+	cursor: pointer;
 }
 .calendar_public_holiday_div a{
 	display: block;
@@ -105,6 +109,7 @@ td.calendar_week_column {
 	height: 15px;
 	font-size: 9px;
 	background-color: #F5DEB3;
+	cursor: pointer;
 }
 .calendar_today_div a{
 	display: block;
@@ -131,8 +136,6 @@ td.calendar_week_column {
 	border: 10px ridge;
 	background-color: white;
 	position: fixed;
-	top: 200px;
-	left: 300px;
 	width: 650px;
 	height: 310px;
 	visibility: hidden;
@@ -141,8 +144,6 @@ td.calendar_week_column {
 	border: 10px ridge;
 	background-color: white;
 	position: fixed;
-	top: 200px;
-	left: 300px;
 	width: 650px;
 	height: 310px;
 	visibility: hidden;
@@ -160,6 +161,4 @@ td.calendar_week_column {
 #loading {
 	position: fixed;
 	visibility: hidden;
-	top: 50px;
-	left: 300px;
 }
