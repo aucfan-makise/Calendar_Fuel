@@ -94,7 +94,7 @@ return array(
 	 * default_timezone		optional, if you want to change the server's default timezone
 	 */
 	// 'server_gmt_offset'  => 0,
-	// 'default_timezone'   => null,
+	'default_timezone'   => "Asia/Tokyo",
 
 	/**
 	 * Logging Threshold.  Can be set to any of the following:
@@ -106,9 +106,9 @@ return array(
 	 * Fuel::L_INFO
 	 * Fuel::L_ALL
 	 */
-	// 'log_threshold'    => Fuel::L_WARNING,
-	// 'log_path'         => APPPATH.'logs/',
-	// 'log_date_format'  => 'Y-m-d H:i:s',
+	'log_threshold'    => Fuel::L_ALL,
+	'log_path'         => APPPATH.'logs/',
+	'log_date_format'  => 'Y-m-d H:i:s',
 
 	/**
 	 * Security settings
@@ -180,6 +180,7 @@ return array(
 			'Fuel\\Core\\View',
 			'Fuel\\Core\\ViewModel',
 			'Closure',
+		    '\DateTime',
 		),
 	),
 
@@ -251,14 +252,14 @@ return array(
 	 * Paths MUST end with a directory separator (the DS constant)!
 	 */
 	'package_paths' => array(
-		PKGPATH
+		PKGPATH,
 	),
 
 
 	/**************************************************************************/
 	/* Always Load                                                            */
 	/**************************************************************************/
-	// 'always_load'  => array(
+	'always_load'  => array(
 
 		/**
 		 * These packages are loaded on Fuel's startup.
@@ -271,9 +272,10 @@ return array(
 		 *     array('auth'	=> PKGPATH.'auth/')
 		 * );
 		 */
-		// 'packages'  => array(
-		// 	//'orm',
-		// ),
+		'packages'  => array(
+			'orm',
+	        'Calendar',
+		),
 
 		/**
 		 * These modules are always loaded on Fuel's startup. You can specify them
@@ -298,7 +300,9 @@ return array(
 		 * add it like 'session' => 'auth'.
 		 * If you don't want the config in a group use null as groupname.
 		 */
-		// 'config'  => array(),
+		'config'  => array(
+		    'calendar',
+		),
 
 		/**
 		 * Language files to autoload
@@ -309,6 +313,6 @@ return array(
 		 * If you don't want the lang in a group use null as groupname.
 		 */
 		// 'language'  => array(),
-	// ),
+	),
 
 );

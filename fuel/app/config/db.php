@@ -6,5 +6,17 @@
  */
 
 return array(
-
+    'active' => 'calendar',
+    
+    'calendar' => array(
+        'type' => 'mysqli',
+        'connection' => array(
+            'hostname' => 'localhost',
+		    'database' => 'calendar',
+		    'username' => 'makise',
+		    'passowrd' => '',
+	    ),
+    'charset' => 'utf8',
+    'table_prefix' => '',
+    ),
 );
